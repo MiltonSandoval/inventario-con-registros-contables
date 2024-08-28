@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Spectre.Console;
 
 namespace Registro
 {
