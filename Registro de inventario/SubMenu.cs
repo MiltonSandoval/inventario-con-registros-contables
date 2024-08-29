@@ -10,6 +10,7 @@ namespace Registro_de_inventario
     {
         public static string Menu2()
         {
+            Console.Clear();
             Console.WriteLine("----------");
             Console.Write(
                 $"Compra al:\n"+
@@ -20,6 +21,7 @@ namespace Registro_de_inventario
         }
         public static string Menu3()
         {
+            Console.Clear();
             Console.WriteLine("----------");
             Console.Write(
                 $"METODOS DE PAGO\n" +
@@ -30,18 +32,6 @@ namespace Registro_de_inventario
                 $"5.Cheque\n" +
                 $"6.Letra de cambio\n" +
                 $"0.Salir\n");
-            return Console.ReadLine();
-        }
-        public static string Menu4()
-        {
-            Console.WriteLine("----------");
-            Console.Write(
-                $"MODELOS DISPONIBLES\n" +
-                $"Modelos Hyundai\n" +
-                $"1.Grand i10\n" +
-                $"2.Creta\n" +
-                $"3.Tucson\n" +
-                $"4.Santa Fe");
             return Console.ReadLine();
         }
     }
