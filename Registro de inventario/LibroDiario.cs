@@ -15,7 +15,6 @@ namespace Registro_de_inventario
         {
             Libro = new List<Asiento>();
         }
-
         public void AgregarAsiento(Asiento asiento)
         {
             if (asiento != null)
@@ -25,9 +24,7 @@ namespace Registro_de_inventario
                 Console.WriteLine("Error al guardar el asiento");
                 Console.ReadKey();
             }
-
         }
-
         public void GuardarEnExcel(string rutaArchivo)
         {
             
@@ -43,7 +40,6 @@ namespace Registro_de_inventario
                 worksheet.Cells[1, 5].Value = "DETALLE";
                 worksheet.Cells[1, 6].Value = "DEBE";
                 worksheet.Cells[1, 7].Value = "HABER";
-
                 for (int i = 0; i < Libro.Count; i++)
                 {
                     var auto = Libro[i];
@@ -62,7 +58,6 @@ namespace Registro_de_inventario
                     }
                     contador++;
                 }
-
                 FileInfo fi = new FileInfo("C:\\Proyecto Prueba Excel\\Prueba.xlsx");
                 package.SaveAs(fi);
             }
