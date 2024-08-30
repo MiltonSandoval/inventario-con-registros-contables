@@ -29,13 +29,13 @@ namespace Registro_de_inventario
         {
             string vacia = "";
 
-            Console.WriteLine($"{vacia,-42}{NumeroDeCuenta,-15}{Cuenta,-25}{Debe,20:N2}{Haber,20:N2}");
+            Console.WriteLine($"{vacia,-42}{NumeroDeCuenta,-15}{Cuenta,-40}{Debe,20:N2}{Haber,20:N2}");
         }
         public void GetTransaccionSinEspacio()
         {
             string vacia = "";
 
-            Console.WriteLine($"{vacia}{NumeroDeCuenta,-15}{Cuenta,-25}{Debe,20:N2}{Haber,20:N2}");
+            Console.WriteLine($"{vacia}{NumeroDeCuenta,-15}{Cuenta,-40}{Debe,20:N2}{Haber,20:N2}");
         }
     }
 }

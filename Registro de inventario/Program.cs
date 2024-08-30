@@ -5,6 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
+
         LibroDiario Inventario = new LibroDiario();
         bool Controlador = true;
         do
