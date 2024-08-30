@@ -13,10 +13,10 @@ namespace Registro_de_inventario
             Console.Clear();
             Console.WriteLine("----------");
             Console.Write(
-                $"Compra al:\n"+
+                $"Compra al:\n" +
                 $"1.Contado\n" +
-                $"2.Credito\n" +
-                $"3.Anticipo\n");
+                $"2.Credito\n");
+            Console.Write("ingrese su opcion:");
             return Console.ReadLine();
         }
         public static string Menu3()
@@ -32,7 +32,10 @@ namespace Registro_de_inventario
                 $"5.Cheque\n" +
                 $"6.Letra de cambio\n" +
                 $"0.Salir\n");
+            Console.Write("ingrese su opcion:");
             return Console.ReadLine();
         }
+
+
     }
 }

@@ -17,6 +17,7 @@ class Program
                     MenuCompra.TipoDeCompra(Inventario);
                     break;
                 case "2":
+                    MenuVenta.TipoDeVenta(Inventario);
                     break;
                 case "3":
                     break;

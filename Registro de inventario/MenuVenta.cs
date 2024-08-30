@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Registro_de_inventario
 {
-    class MenuCompra
+    class MenuVenta
     {
-        public static void TipoDeCompra(LibroDiario inventario)
+        public static void TipoDeVenta(LibroDiario inventario)
         {
             bool Controlador = true;
             do
@@ -18,11 +18,11 @@ namespace Registro_de_inventario
                 switch (opcion)
                 {
                     case "1":
-                        MetodoDePago("CDE", inventario,0);
+                        MetodoDePago("CDI", inventario, 0);
                         Controlador = false;
                         break;
                     case "2":
-                        MetodoDePago("CDT", inventario,1);
+                        MetodoDePago("CDT", inventario, 1);
                         Controlador = false;
                         break;
                     default:
@@ -34,14 +34,14 @@ namespace Registro_de_inventario
             } while (Controlador);
         }
 
-        private static void MetodoDePago(string Comprobante, LibroDiario inventario,int tipo)
+        private static void MetodoDePago(string Comprobante, LibroDiario inventario, int tipo)
         {
             List<List<string>> CuentasPago = new List<List<string>>
             {
                 new List<string>()
                 {"Caja M/N","Caja M/E","Banco cta.cte.M/N","Banco cta.cte.M/E","Caja M/N"},
                 new List<string>()
-                {"Cuenta por pagar","Cuenta por pagar","Cuenta por pagar","Cuenta por pagar","Documento por pagar"},
+                {"Cuenta por cobrar","Cuenta por cobrar","Cuenta por cobrar","Cuenta por cobrar","Documento por cobrar"},
 
             };
 
@@ -53,24 +53,24 @@ namespace Registro_de_inventario
                 {
                     case "1":
                     case "5":
-                        Modelos("1.1.1.01.01", Comprobante, CuentasPago[tipo][0], inventario);
+                        ModelosVenta("1.1.1.01.01", Comprobante, CuentasPago[tipo][0], inventario);
                         Controlador = false;
                         break;
                     case "2":
-                        Modelos("1.1.1.01.02", Comprobante, CuentasPago[tipo][1], inventario);
+                        ModelosVenta("1.1.1.01.02", Comprobante, CuentasPago[tipo][1], inventario);
                         Controlador = false;
                         break;
 
                     case "3":
-                        Modelos("1.1.1.02.01", Comprobante, CuentasPago[tipo][2], inventario);
+                        ModelosVenta("1.1.1.02.01", Comprobante, CuentasPago[tipo][2], inventario);
                         Controlador = false;
                         break;
                     case "4":
-                        Modelos("1.1.1.02.02", Comprobante, CuentasPago[tipo][3], inventario);
+                        ModelosVenta("1.1.1.02.02", Comprobante, CuentasPago[tipo][3], inventario);
                         Controlador = false;
                         break;
                     case "6":
-                        Modelos("1.1.1.01.01", Comprobante, CuentasPago[tipo][4], inventario);
+                        ModelosVenta("1.1.1.01.01", Comprobante, CuentasPago[tipo][4], inventario);
                         Controlador = false;
                         break;
                     case "0":
@@ -85,21 +85,28 @@ namespace Registro_de_inventario
 
             } while (Controlador);
         }
-        private static void Modelos(string NCuenta,string Comprobante,string Pago, LibroDiario inventario)
-        {
+        private static void ModelosVenta(string NCuenta, string Comprobante, string Pago, LibroDiario inventario)
+        {   
             Console.Clear();
             Console.Write("Ingrese el nombre del producto, sin ascento:");
             string Producto = Console.ReadLine().ToLower();
             Console.Write("Ingrese la cantidad:");
             double cantidad = double.Parse(Console.ReadLine());
-            Console.Write("Ingrese el costo unitario:");
+            Console.Write("Ingrese el precio unitario:");
             double unitario = double.Parse(Console.ReadLine());
             double total = cantidad * unitario;
+            double costototal = (unitario * 0.87) * cantidad;
             Asiento asiento = new Asiento(Comprobante);
 
-            asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "inventario de mercaderia", total * 0.87, 0));
-            asiento.AgregarTransaccion(new Transaccion("1.1.2.03.01", "credito fiscal", total * 0.13, 0));
-            asiento.AgregarTransaccion(new Transaccion(NCuenta,"  "+Pago, 0, total));
+            asiento.AgregarTransaccion(new Transaccion(NCuenta,Pago, total, 0));
+            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "impuesto a las transacciones", total * 0.03, 0));
+            asiento.AgregarTransaccion(new Transaccion("4.1.1.01.01", "  Venta de mercaderia", 0, total * 0.87));
+            asiento.AgregarTransaccion(new Transaccion("2.1.2.01.01", "  Debito fiscal", 0, total * 0.13));
+            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "  impuesto a las transacciones p/pagar", 0, total * 0.03));
+            asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "costo de mercaderia vendida", costototal, 0));
+            asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "  inventario de mercaderia",0, costototal));
+
+           
             asiento.ImprimirAsiento();
             inventario.AgregarAsiento(asiento);
             Console.ReadKey();
