@@ -12,18 +12,15 @@ namespace Registro_de_inventario
 
         public string Detalle;
         public string Comp;
-        public double EntradasFisica { get; set; }
-        public double SalidasFisica { get; set; }
-        public double SaldoFisico { get; set; }
-        public double CostoAdq { get; set; }
-        public double CostoPp { get; set; }
-        public double EntradaValor { get; set; }
-        public double SalidaValor { get; set; }
-        public double SaldoValor { get; set; }
+        public decimal EntradasFisica { get; set; }
+        public decimal SalidasFisica { get; set; }
+        public decimal SaldoFisico { get; set; }
+        public decimal CostoAdq { get; set; }
+        public decimal CostoPp { get; set; }
+        public decimal EntradaValor { get; set; }
+        public decimal SalidaValor { get; set; }
+        public decimal SaldoValor { get; set; }
 
-        private static int CompraN = 1;
-
-        private static int VentaN = 1;
 
 
 
@@ -32,7 +29,7 @@ namespace Registro_de_inventario
             this.fecha = DateTime.Now;
         }
 
-        public void KardexInicio(double saldosfisicos,double costoPP, double saldoValor)
+        public void KardexInicio(decimal saldosfisicos,decimal costoPP, decimal saldoValor)
         {
             Detalle = "Saldo Inicial";
             Comp = "CDT";
@@ -46,33 +43,31 @@ namespace Registro_de_inventario
             SaldoValor = saldoValor;
         }
 
-        public void KardexCompra(double entradasfisicas, double saldosfisicos, double costoadq, double saldoanterior)
+        public void KardexCompra(decimal entradasfisicas, decimal saldosfisicos, decimal costoadq, decimal saldoanterior)
         {
-            Detalle = $"Compra {CompraN}";
+            Detalle = $"Compra";
             Comp = "CDE";
             EntradasFisica = entradasfisicas;
             SalidasFisica = 0;
             SaldoFisico = saldosfisicos;
-            CostoAdq = costoadq * 0.87;
+            CostoAdq = (costoadq * 0.87m);
             EntradaValor = EntradasFisica * CostoAdq;
             SalidaValor = 0;
             SaldoValor = EntradaValor + saldoanterior;
             CostoPp = SaldoValor /SaldoFisico;
-            CompraN++;
         } 
-        public void Kardexventa(double salidasfisicas, double saldosfisicos, double costopp)
+        public void Kardexventa(decimal salidasfisicas, decimal saldosfisicos, decimal costopp, decimal saldot)
         {
-            Detalle = $"Vemta {VentaN}";
+            Detalle = $"Vemta";
             Comp = "CDI";
             EntradasFisica = 0;
             SalidasFisica = salidasfisicas;
-            SaldoFisico -= SalidasFisica;
+            SaldoFisico = saldosfisicos;
             CostoAdq =  0;
             CostoPp = costopp;
             EntradaValor =  0;
             SalidaValor = SalidasFisica * CostoPp;
-            SaldoValor -= SalidaValor;
-            VentaN++;
+            SaldoValor =saldot -  SalidaValor;
         }
     }
 }

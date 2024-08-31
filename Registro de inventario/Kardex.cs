@@ -31,13 +31,13 @@ namespace Registro_de_inventario
 
         public void ImprimirKardex()
         {
-            Console.WriteLine("{0,-12} {1,-10} {2,-8} {3,-8} {4,-8} {5,-8} {6,-8} {7,-10} {8,-10} {9,-10}",
+            Console.WriteLine("{0,-24} {1,-20} {2,-16} {3,-16} {4,-16} {5,-16} {6,-16} {7,-20} {8,-20} {9,-20}",
                 "Fecha", "Detalle", "Entradas", "Salidas", "Saldos", "C.Adq.", "P.P.", "Costo Ent.", "Costo Sal.", "Costo Saldo");
-            Console.WriteLine(new string('-', 100)); 
+            Console.WriteLine(new string('-', 200)); 
 
             foreach (var transaccion in KardexProducto)
             {
-                Console.WriteLine("{0,-12} {1,-10} {2,-8} {3,-8} {4,-8} {5,-8:F2} {6,-8:F2} {7,-10:F2} {8,-10:F2} {9,-10:F2}",
+                Console.WriteLine("{0,-24} {1,-20} {2,-16} {3,-16} {4,-16} {5,-16:N2} {6,-16:N2} {7,-20:N2} {8,-20:N2} {9,-20:N2}",
                     transaccion.fecha.ToShortDateString() , transaccion.Detalle, transaccion.EntradasFisica, transaccion.SalidasFisica,
                     transaccion.SaldoFisico, transaccion.CostoAdq, transaccion.CostoPp, transaccion.EntradaValor,
                     transaccion.SalidaValor, transaccion.SaldoValor);

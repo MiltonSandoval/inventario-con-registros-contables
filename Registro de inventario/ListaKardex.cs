@@ -24,10 +24,12 @@ namespace Registro_de_inventario
         {
             foreach (var item in KardexList)
             {
+                Console.WriteLine(item.Nombre);
                 item.ImprimirKardex();
                 Console.WriteLine();
-                Console.WriteLine();
+                Console.WriteLine(new string('-', 200));
             }
+            
         }
 
 

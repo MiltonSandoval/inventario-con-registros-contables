@@ -41,16 +41,21 @@ namespace Registro_de_inventario
                 
         }
 
-        public void ImprimirAsiento()
+        public void ImprimirAsientoCon()
         {
             Console.Clear();
             Console.WriteLine($"{"FECHA",-22}{"CBTE",-10}{"As.N°",-10}{"Cod. Cta",-15}{"Detalle-Glosa",-40}{"Debe",20}{"Haber",20}");
 
+            ImprimirAsientoSin();
+
+        }
+        public void ImprimirAsientoSin()
+        {
             Console.Write($"{date.ToShortDateString(),-22}{Cbte,-10}{AsientoN,-10}");
             int contador = 0;
             foreach (var item in Transacciones)
             {
-                if(contador == 0)
+                if (contador == 0)
                 {
                     item.GetTransaccionSinEspacio();
                     contador++;
@@ -58,8 +63,7 @@ namespace Registro_de_inventario
                 else
                     item.GetTransaccionConEspacio();
             }
-            Console.WriteLine(); 
+            Console.WriteLine();
         }
-
     }
 }

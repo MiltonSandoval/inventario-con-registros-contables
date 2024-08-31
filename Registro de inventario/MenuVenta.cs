@@ -8,7 +8,7 @@ namespace Registro_de_inventario
 {
     class MenuVenta
     {
-        public static void TipoDeVenta(LibroDiario inventario)
+        public static void TipoDeVenta(LibroDiario inventario, ListaKardex listaKardex)
         {
             bool Controlador = true;
             do
@@ -18,11 +18,11 @@ namespace Registro_de_inventario
                 switch (opcion)
                 {
                     case "1":
-                        MetodoDePago("CDI", inventario, 0);
+                        MetodoDePago("CDI", inventario, 0, listaKardex);
                         Controlador = false;
                         break;
                     case "2":
-                        MetodoDePago("CDT", inventario, 1);
+                        MetodoDePago("CDT", inventario, 1, listaKardex);
                         Controlador = false;
                         break;
                     default:
@@ -34,7 +34,7 @@ namespace Registro_de_inventario
             } while (Controlador);
         }
 
-        private static void MetodoDePago(string Comprobante, LibroDiario inventario, int tipo)
+        private static void MetodoDePago(string Comprobante, LibroDiario inventario, int tipo, ListaKardex listakardex)
         {
             List<List<string>> CuentasPago = new List<List<string>>
             {
@@ -53,24 +53,24 @@ namespace Registro_de_inventario
                 {
                     case "1":
                     case "5":
-                        ModelosVenta("1.1.1.01.01", Comprobante, CuentasPago[tipo][0], inventario);
+                        ModelosVenta("1.1.1.01.01", Comprobante, CuentasPago[tipo][0], inventario, listakardex);
                         Controlador = false;
                         break;
                     case "2":
-                        ModelosVenta("1.1.1.01.02", Comprobante, CuentasPago[tipo][1], inventario);
+                        ModelosVenta("1.1.1.01.02", Comprobante, CuentasPago[tipo][1], inventario, listakardex);
                         Controlador = false;
                         break;
 
                     case "3":
-                        ModelosVenta("1.1.1.02.01", Comprobante, CuentasPago[tipo][2], inventario);
+                        ModelosVenta("1.1.1.02.01", Comprobante, CuentasPago[tipo][2], inventario, listakardex);
                         Controlador = false;
                         break;
                     case "4":
-                        ModelosVenta("1.1.1.02.02", Comprobante, CuentasPago[tipo][3], inventario);
+                        ModelosVenta("1.1.1.02.02", Comprobante, CuentasPago[tipo][3], inventario, listakardex);
                         Controlador = false;
                         break;
                     case "6":
-                        ModelosVenta("1.1.1.01.01", Comprobante, CuentasPago[tipo][4], inventario);
+                        ModelosVenta("1.1.1.01.01", Comprobante, CuentasPago[tipo][4], inventario, listakardex);
                         Controlador = false;
                         break;
                     case "0":
@@ -85,32 +85,67 @@ namespace Registro_de_inventario
 
             } while (Controlador);
         }
-        private static void ModelosVenta(string NCuenta, string Comprobante, string Pago, LibroDiario inventario)
+        private static void ModelosVenta(string NCuenta, string Comprobante, string Pago, LibroDiario inventario, ListaKardex listakardex)
         {   
             Console.Clear();
-            Console.Write("Ingrese el nombre del producto, sin ascento:");
-            string Producto = Console.ReadLine().ToLower();
+            Kardex producto1 = Historial(listakardex);
             Console.Write("Ingrese la cantidad:");
-            double cantidad = double.Parse(Console.ReadLine());
-            Console.Write("Ingrese el precio unitario:");
-            double unitario = double.Parse(Console.ReadLine());
-            double total = cantidad * unitario;
-            double costototal = (unitario * 0.87) * cantidad;
+            decimal cantidad = decimal.Parse(Console.ReadLine());
+            Console.Write("Ingrese el precio unitario de venta :");
+            decimal unitario = decimal.Parse(Console.ReadLine());
+
+
+            KardexTransaccion ultimaTransaccion = producto1.UltimaTransa();
+            KardexTransaccion kardexventa = new KardexTransaccion();
+            decimal total = cantidad * unitario;
+            decimal costototal =  ultimaTransaccion.CostoPp * cantidad;
+            kardexventa.Kardexventa(cantidad, ultimaTransaccion.SaldoFisico - cantidad, ultimaTransaccion.CostoPp,ultimaTransaccion.SaldoValor);
             Asiento asiento = new Asiento(Comprobante);
 
+
+
             asiento.AgregarTransaccion(new Transaccion(NCuenta,Pago, total, 0));
-            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "impuesto a las transacciones", total * 0.03, 0));
-            asiento.AgregarTransaccion(new Transaccion("4.1.1.01.01", "  Venta de mercaderia", 0, total * 0.87));
-            asiento.AgregarTransaccion(new Transaccion("2.1.2.01.01", "  Debito fiscal", 0, total * 0.13));
-            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "  impuesto a las transacciones p/pagar", 0, total * 0.03));
+            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "impuesto a las transacciones", total * 0.03m, 0));
+            asiento.AgregarTransaccion(new Transaccion("4.1.1.01.01", "  Venta de mercaderia", 0, total * 0.87m));
+            asiento.AgregarTransaccion(new Transaccion("2.1.2.01.01", "  Debito fiscal", 0, total * 0.13m));
+            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "  impuesto a las transacciones p/pagar", 0, total * 0.03m));
             asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "costo de mercaderia vendida", costototal, 0));
             asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "  inventario de mercaderia",0, costototal));
 
-           
-            asiento.ImprimirAsiento();
+            asiento.ImprimirAsientoCon();
+            producto1.AgregarTransaccionKardex(kardexventa);
+            producto1.ImprimirKardex();
             inventario.AgregarAsiento(asiento);
             Console.ReadKey();
         }
 
+
+        private static Kardex Historial(ListaKardex listaKardex)
+        {
+
+            while (true)
+            {
+                Console.WriteLine("Productos");
+                int contador = 1;
+                foreach (var item in listaKardex.KardexList)
+                {
+
+                    Console.WriteLine($"{contador}.{item.Nombre}");
+                    contador++;
+                }
+                Console.Write("Ingrese su opcion:");
+                string opcion = Console.ReadLine();
+                if (int.Parse(opcion) - 1 >= 0 && int.Parse(opcion)<= listaKardex.KardexList.Count)
+                {
+                    return listaKardex.KardexList[int.Parse(opcion) - 1 ];
+                }
+                else
+                {
+                    Console.WriteLine("Error ingrese una opcion valida!!");
+                    Console.ReadKey();
+                }
+            }
+            return null;
+        }
     }
 }

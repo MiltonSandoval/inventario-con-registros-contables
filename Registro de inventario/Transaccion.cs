@@ -12,11 +12,11 @@ namespace Registro_de_inventario
         
         public string NumeroDeCuenta;
         public string Cuenta;
-        public double Debe = 0;
-        public double Haber = 0;
+        public decimal Debe = 0;
+        public decimal Haber = 0;
 
 
-        public Transaccion(string NumCta, string Cuenta, double debe, double haber)
+        public Transaccion(string NumCta, string Cuenta, decimal debe, decimal haber)
         {
 
             this.NumeroDeCuenta = NumCta;

@@ -85,47 +85,88 @@ namespace Registro_de_inventario
 
             } while (Controlador);
         }
-        private static void Modelos(string NCuenta,string Comprobante,string Pago, LibroDiario inventario, ListaKardex listaKardex)
+        private static void Modelos(string NCuenta, string Comprobante, string Pago, LibroDiario inventario, ListaKardex listaKardex)
         {
             Console.Clear();
-            Console.Write("Ingrese el nombre del producto, sin ascento:");
-            string Producto = Console.ReadLine().ToLower();
+            Console.Write("Ingrese el nombre del producto, sin acento:");
+            string producto = Console.ReadLine().ToLower();
             Console.Write("Ingrese la cantidad:");
-            double cantidad = double.Parse(Console.ReadLine());
+            decimal cantidad = decimal.Parse(Console.ReadLine());
             Console.Write("Ingrese el costo unitario:");
-            double unitario = double.Parse(Console.ReadLine());
-            double total = cantidad * unitario;
+            decimal unitario = decimal.Parse(Console.ReadLine());
+            decimal total = cantidad * unitario;
             Asiento asiento = new Asiento(Comprobante);
 
+            Kardex kar = listaKardex.BuscarKardexProducto(producto);
+            KardexTransaccion kardexTransaccion = new KardexTransaccion();
 
-            Kardex Kar = listaKardex.BuscarKardexProducto(Producto);
-
-
-            if (Kar != null)
+            if (kar != null)
             {
-                KardexTransaccion ultimatransaccion = Kar.UltimaTransa();
-                KardexTransaccion kardexTransaccion = new KardexTransaccion();
-                kardexTransaccion.KardexCompra(cantidad, ultimatransaccion.SaldoFisico + cantidad, unitario,ultimatransaccion.SaldoValor);
-                Kar.AgregarTransaccionKardex(kardexTransaccion);
+                KardexTransaccion ultimaTransaccion = kar.UltimaTransa();
+                kardexTransaccion.KardexCompra(cantidad, ultimaTransaccion.SaldoFisico + cantidad, unitario, ultimaTransaccion.SaldoValor);
+                kar.AgregarTransaccionKardex(kardexTransaccion);
+                AgregarTransaccionesAsiento(asiento, NCuenta, Pago, total, aplicarImpuestos: true);
+
             }
             else
             {
-                Kar = new Kardex(Producto);
-                KardexTransaccion kardexTransaccion = new KardexTransaccion();
-                kardexTransaccion.KardexInicio(cantidad, unitario, total);
-                Kar.AgregarTransaccionKardex(kardexTransaccion);
-            }
-                
+                bool aplicarImpuestos = PreguntarImpuestos();
+                kar = new Kardex(producto);
+                decimal costoUnitarioAplicado = aplicarImpuestos ? unitario * 0.87m : unitario;
+                decimal totalAplicado = aplicarImpuestos ? total * 0.87m : total;
 
-            asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "inventario de mercaderia", total * 0.87, 0));
-            asiento.AgregarTransaccion(new Transaccion("1.1.2.03.01", "credito fiscal", total * 0.13, 0));
-            asiento.AgregarTransaccion(new Transaccion(NCuenta,"  "+Pago, 0, total));
-            asiento.ImprimirAsiento();
+                kardexTransaccion.KardexInicio(cantidad, costoUnitarioAplicado, totalAplicado);
+                kar.AgregarTransaccionKardex(kardexTransaccion);
+
+                AgregarTransaccionesAsiento(asiento, NCuenta, Pago, total, aplicarImpuestos);
+                listaKardex.AgregarKardex(kar);
+            }
+
+            asiento.ImprimirAsientoCon();
             inventario.AgregarAsiento(asiento);
-            listaKardex.AgregarKardex(Kar);
-            Kar.ImprimirKardex();
+            kar.ImprimirKardex();
             Console.ReadKey();
         }
+
+        private static void AgregarTransaccionesAsiento(Asiento asiento, string NCuenta, string Pago, decimal total, bool aplicarImpuestos)
+        {
+            if (aplicarImpuestos)
+            {
+                asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "inventario de mercadería", total * 0.87m, 0));
+                asiento.AgregarTransaccion(new Transaccion("1.1.2.03.01", "  crédito fiscal", total * 0.13m, 0));
+                asiento.AgregarTransaccion(new Transaccion(NCuenta, "  " + Pago, 0, total));
+            }
+            else
+            {
+                asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "inventario de mercadería", total, 0));
+                asiento.AgregarTransaccion(new Transaccion("3.1.1.01.01", "  Capital Social", 0, total));
+            }
+        }
+
+        private static bool PreguntarImpuestos()
+        {
+            while (true)
+            {
+                Console.WriteLine("¿DESEA APLICAR IMPUESTOS A ESTA COMPRA? Si/No");
+                Console.Write("Ingrese su opción: ");
+                string opcion = Console.ReadLine().ToLower();
+
+                if (opcion == "si")
+                {
+                    return true;
+                }
+                else if (opcion == "no")
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("Error: opción inválida.");
+                    Console.ReadKey();
+                }
+            }
+        }
+
 
     }
 }
