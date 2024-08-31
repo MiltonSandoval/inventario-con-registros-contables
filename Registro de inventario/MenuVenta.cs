@@ -10,28 +10,38 @@ namespace Registro_de_inventario
     {
         public static void TipoDeVenta(LibroDiario inventario, ListaKardex listaKardex)
         {
-            bool Controlador = true;
-            do
+            try
+            {
+                bool Controlador = true;
+                do
+                {
+                    Console.Clear();
+                    string opcion = SubMenu.Menu2();
+                    switch (opcion)
+                    {
+                        case "1":
+                            MetodoDePago("CDI", inventario, 0, listaKardex);
+                            Controlador = false;
+                            break;
+                        case "2":
+                            MetodoDePago("CDT", inventario, 1, listaKardex);
+                            Controlador = false;
+                            break;
+                        default:
+                            break;
+                    }
+
+
+
+                } while (Controlador);
+            }
+            catch (Exception Ex)
             {
                 Console.Clear();
-                string opcion = SubMenu.Menu2();
-                switch (opcion)
-                {
-                    case "1":
-                        MetodoDePago("CDI", inventario, 0, listaKardex);
-                        Controlador = false;
-                        break;
-                    case "2":
-                        MetodoDePago("CDT", inventario, 1, listaKardex);
-                        Controlador = false;
-                        break;
-                    default:
-                        break;
-                }
-
-
-
-            } while (Controlador);
+                Console.WriteLine($"Error de inesperado:{Ex.Message}");
+                Console.ReadKey();
+            }
+            
         }
 
         private static void MetodoDePago(string Comprobante, LibroDiario inventario, int tipo, ListaKardex listakardex)
