@@ -8,13 +8,13 @@ namespace Registro_de_inventario
 {
     class KardexTransaccion
     {
-        DateTime fecha;
+        public DateTime fecha;
 
         public string Detalle;
         public string Comp;
-        public int EntradasFisica { get; set; }
-        public int SalidasFisica { get; set; }
-        public int SaldoFisico { get; set; }
+        public double EntradasFisica { get; set; }
+        public double SalidasFisica { get; set; }
+        public double SaldoFisico { get; set; }
         public double CostoAdq { get; set; }
         public double CostoPp { get; set; }
         public double EntradaValor { get; set; }
@@ -32,7 +32,7 @@ namespace Registro_de_inventario
             this.fecha = DateTime.Now;
         }
 
-        public void KardexInicio(int saldosfisicos,double costoAdq, double saldoValor)
+        public void KardexInicio(double saldosfisicos,double costoPP, double saldoValor)
         {
             Detalle = "Saldo Inicial";
             Comp = "CDT";
@@ -40,13 +40,13 @@ namespace Registro_de_inventario
             SalidasFisica = 0;
             SaldoFisico = saldosfisicos;
             CostoAdq = 0;
-            CostoPp = saldoValor;
+            CostoPp = costoPP;
             EntradaValor = 0;
             SalidaValor = 0;
-            SaldoValor = SaldoFisico * CostoAdq;
+            SaldoValor = saldoValor;
         }
 
-        public void KardexCompra(int entradasfisicas, int saldosfisicos, double costoadq)
+        public void KardexCompra(double entradasfisicas, double saldosfisicos, double costoadq, double saldoanterior)
         {
             Detalle = $"Compra {CompraN}";
             Comp = "CDE";
@@ -56,11 +56,11 @@ namespace Registro_de_inventario
             CostoAdq = costoadq * 0.87;
             EntradaValor = EntradasFisica * CostoAdq;
             SalidaValor = 0;
-            SaldoValor = EntradaValor + SaldoValor;
+            SaldoValor = EntradaValor + saldoanterior;
             CostoPp = SaldoValor /SaldoFisico;
             CompraN++;
         } 
-        public void Kardexventa(int salidasfisicas, int saldosfisicos, double costopp)
+        public void Kardexventa(double salidasfisicas, double saldosfisicos, double costopp)
         {
             Detalle = $"Vemta {VentaN}";
             Comp = "CDI";

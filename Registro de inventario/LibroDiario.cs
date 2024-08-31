@@ -56,7 +56,6 @@ namespace Registro_de_inventario
                         worksheet.Cells[i + contador, 7].Value = item.Haber;
                         contador++;
                     }
-                    contador++;
                 }
                 FileInfo fi = new FileInfo("C:\\Proyecto Prueba Excel\\Prueba.xlsx");
                 package.SaveAs(fi);

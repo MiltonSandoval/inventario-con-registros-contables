@@ -7,6 +7,7 @@ class Program
     {
 
         LibroDiario Inventario = new LibroDiario();
+        ListaKardex ListaKardex = new ListaKardex();
         bool Controlador = true;
         do
         {
@@ -15,7 +16,7 @@ class Program
             switch (opcion)
             {
                 case "1":
-                    MenuCompra.TipoDeCompra(Inventario);
+                    MenuCompra.TipoDeCompra(Inventario, ListaKardex);
                     break;
                 case "2":
                     MenuVenta.TipoDeVenta(Inventario);
