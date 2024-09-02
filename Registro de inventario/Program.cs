@@ -8,7 +8,6 @@ class Program
 
     static void Main(string[] args)
     {
-
         try
         {
             JsonAlmacen<LibroDiario> JsonLibro = new JsonAlmacen<LibroDiario>("Libro.json");
@@ -93,9 +92,16 @@ class Program
 
     public static string MenuPrincipal()
     {
+
+        AnsiConsole.Write(
+        new FigletText("UPDS")
+        .Centered()
+        .Color(Color.Blue));
+        var rule = new Rule("[red]SISTEMA DE REGISTRO CONTABLE[/]\n");
+        AnsiConsole.Write(rule);
         var opcion = AnsiConsole.Prompt(
         new SelectionPrompt<string>()
-            .Title("[green]MENU PRINCIPAL[/]")
+            .Title("\t[green]MENU PRINCIPAL[/]")
             .PageSize(5)
             .AddChoices(new[] {
             "REGISTRAR UNA COMPRA", "REGISTRAR UNA VENTA", "MOSTRAR REGISTROS",

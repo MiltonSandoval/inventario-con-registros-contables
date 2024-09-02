@@ -14,9 +14,11 @@ namespace Registro_de_inventario
         public static string Menu2()
         {
             Console.Clear();
+            var rule = new Rule("[red]TIPO DE COMPRA[/]\n");
+            AnsiConsole.Write(rule);
             var opcion = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("[green]COMPRA AL[/]")
+            .Title("\t[green]COMPRA AL[/]")
             .PageSize(3)
             .AddChoices(new[] {
             "Contado", "Credito"}));
@@ -26,9 +28,11 @@ namespace Registro_de_inventario
         { 
 
             Console.Clear();
+            var rule = new Rule("[red]METODOS DE PAGO[/]\n");
+            AnsiConsole.Write(rule);
             var opcion = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("[green]METODOS DE PAGO[/]")
+            .Title("\t[green]PAGO EN[/]")
             .PageSize(8)
             .AddChoices(new[] {
             "Efectivo", "Efectivo M/E","Banco M/N","Banco M/E","Cheque","Letra de cambio","Salir"}));

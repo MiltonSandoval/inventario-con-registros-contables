@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace Registro_de_inventario
 {
@@ -44,10 +45,35 @@ namespace Registro_de_inventario
         public void ImprimirAsientoCon()
         {
             Console.Clear();
-            Console.WriteLine($"{"FECHA",-22}{"CBTE",-10}{"As.N°",-10}{"Cod. Cta",-15}{"Detalle-Glosa",-40}{"Debe",20}{"Haber",20}");
+            var table = new Table();
 
-            ImprimirAsientoSin();
+            table.AddColumns(new[]
+            {
+                new TableColumn("FECHA").Centered(),
+                new TableColumn("CBTE").Centered(),
+                new TableColumn("As.N°").Centered(),
+                new TableColumn("Cod. Cta").Centered(),
+                new TableColumn("Detalle-Glosa").Centered(),
+                new TableColumn("Debe").Centered(),
+                new TableColumn("Haber").Centered()
+            });
 
+            int contador = 0;
+            foreach (var item in Transacciones)
+            {
+                if (contador == 0)
+                {
+                    table.AddRow(date.ToShortDateString(),Cbte,AsientoN.ToString(),item.NumeroDeCuenta.ToString(),item.Cuenta.ToString(),item.Debe.ToString(),item.Haber.ToString());
+                    contador++;
+                }
+                else
+                {
+                    table.AddRow(" "," "," ", item.NumeroDeCuenta.ToString(), item.Cuenta.ToString(), item.Debe.ToString(), item.Haber.ToString());
+                }
+            }
+
+            AnsiConsole.Write(table);
+            Console.ReadKey();
         }
         public void ImprimirAsientoSin()
         {
