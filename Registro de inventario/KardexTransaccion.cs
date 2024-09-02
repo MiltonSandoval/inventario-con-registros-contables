@@ -58,7 +58,7 @@ namespace Registro_de_inventario
         } 
         public void Kardexventa(decimal salidasfisicas, decimal saldosfisicos, decimal costopp, decimal saldot)
         {
-            Detalle = $"Vemta";
+            Detalle = $"Venta";
             Comp = "CDI";
             EntradasFisica = 0;
             SalidasFisica = salidasfisicas;

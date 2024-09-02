@@ -11,8 +11,15 @@ class Program
 
         try
         {
-            LibroDiario Inventario = new LibroDiario();
-            ListaKardex ListaKardex = new ListaKardex();
+            JsonAlmacen<LibroDiario> JsonLibro = new JsonAlmacen<LibroDiario>("Libro.json");
+            JsonAlmacen<ListaKardex> JsonKardex = new JsonAlmacen<ListaKardex>("ListaKardex.json");
+            LibroDiario Inventario = JsonLibro.CargarDatos();
+            ListaKardex ListaKardex = JsonKardex.CargarDatos();
+            if(Inventario == null & ListaKardex == null)
+            {
+                Inventario = new LibroDiario();
+                ListaKardex = new ListaKardex();
+            }
             bool Controlador = true;
             do
             {
@@ -20,10 +27,10 @@ class Program
                 string opcion = MenuPrincipal();
                 switch (opcion)
                 {
-                    case "1":
+                    case "REGISTRAR UNA COMPRA":
                         MenuCompra.TipoDeCompra(Inventario, ListaKardex);
                         break;
-                    case "2":
+                    case "REGISTRAR UNA VENTA":
                         if (ListaKardex.KardexList.Count > 0)
                             MenuVenta.TipoDeVenta(Inventario, ListaKardex);
                         else
@@ -32,21 +39,34 @@ class Program
                             Console.ReadKey();
                         }
                         break;
-                    case "3":
-                        Console.WriteLine("LIBRO DIARIO");
-                        Inventario.ImprimirLibro();
-                        Console.WriteLine(new string('-', 200));
-                        Console.WriteLine("TODOS LOS KARDEX");
-                        ListaKardex.ImprimirKarkexAll();
-                        Console.WriteLine();
-                        Console.ReadKey();
-                        break;
-                    case "4":
+                    case "MOSTRAR REGISTROS":
+                        if(Inventario.Libro.Count > 0 && ListaKardex.KardexList.Count > 0)
+                        {
+                            Console.WriteLine("LIBRO DIARIO");
+                            Inventario.ImprimirLibro();
+                            Console.WriteLine(new string('-', 200));
+                            Console.WriteLine("TODOS LOS KARDEX");
+                            ListaKardex.ImprimirKarkexAll();
+                            Console.WriteLine();
+                            Console.ReadKey();
+                            break;
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("NO TIENES NADA PARA MOSTRAR, INGRESA UN REGISTRO!!!");
+                            Console.ReadKey();
+                            break;
+                        }
+                        
+                    case "EXPORTAR A EXCEL":
                         Console.Write("Ingrese la ruta del archivo Excel para guardar: ");
                         string rutaArchivo = Console.ReadLine();
                         GuardarEnExcel(rutaArchivo, ListaKardex, Inventario);
                         break;
-                    case "0":
+                    case "SALIR":
+                        JsonLibro.Guardar(Inventario);
+                        JsonKardex.Guardar(ListaKardex);
                         Controlador = false;
                         break;
                     default:
@@ -68,16 +88,19 @@ class Program
         
     }
 
+
+
+
     public static string MenuPrincipal()
     {
-        Console.WriteLine("INVENTARIO DE MERCADERIA");
-        Console.Write("1.REGISTRAR UNA COMPRA\n");
-        Console.Write("2.REGISTRAR UNA VENTA\n");
-        Console.Write("3.MOSTRAR REGISTROS\n");
-        Console.Write("4.GUARDAR EN EXCEL\n");
-        Console.Write("0.SALIR\n");
-        Console.Write("Ingrese su opcion:");
-        return Console.ReadLine();
+        var opcion = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("[green]MENU PRINCIPAL[/]")
+            .PageSize(5)
+            .AddChoices(new[] {
+            "REGISTRAR UNA COMPRA", "REGISTRAR UNA VENTA", "MOSTRAR REGISTROS",
+            "EXPORTAR A EXCEL", "SALIR"}));
+        return opcion;
 
     }
     public static void GuardarEnExcel(string rutaArchivo, ListaKardex listaKardex, LibroDiario libro)

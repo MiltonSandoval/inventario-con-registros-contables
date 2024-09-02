@@ -3,37 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace Registro_de_inventario
 {
     class SubMenu
     {
+
+        
         public static string Menu2()
         {
             Console.Clear();
-            Console.WriteLine("----------");
-            Console.Write(
-                $"Compra al:\n" +
-                $"1.Contado\n" +
-                $"2.Credito\n");
-            Console.Write("ingrese su opcion:");
-            return Console.ReadLine();
+            var opcion = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("[green]COMPRA AL[/]")
+            .PageSize(3)
+            .AddChoices(new[] {
+            "Contado", "Credito"}));
+            return opcion;
         }
         public static string Menu3()
-        {
+        { 
+
             Console.Clear();
-            Console.WriteLine("----------");
-            Console.Write(
-                $"METODOS DE PAGO\n" +
-                $"1.Efectivo\n" +
-                $"2.Efectivo M/E\n" +
-                $"3.Banco M/N\n" +
-                $"4.Banco M/E\n" +
-                $"5.Cheque\n" +
-                $"6.Letra de cambio\n" +
-                $"0.Salir\n");
-            Console.Write("ingrese su opcion:");
-            return Console.ReadLine();
+            var opcion = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("[green]METODOS DE PAGO[/]")
+            .PageSize(8)
+            .AddChoices(new[] {
+            "Efectivo", "Efectivo M/E","Banco M/N","Banco M/E","Cheque","Letra de cambio","Salir"}));
+            return opcion;
         }
 
 

@@ -25,7 +25,7 @@ namespace Registro_de_inventario
         public KardexTransaccion UltimaTransa()
         {
             int indice = KardexProducto.Count() - 1;
-            return indice >= 0  ? KardexProducto[indice] : null;
+            return indice >= 0 ? KardexProducto[indice] : null;
         }
 
 

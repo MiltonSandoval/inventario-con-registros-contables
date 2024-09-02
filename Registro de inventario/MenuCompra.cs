@@ -19,11 +19,11 @@ namespace Registro_de_inventario
                     string opcion = SubMenu.Menu2();
                     switch (opcion)
                     {
-                        case "1":
+                        case "Contado":
                             MetodoDePago("CDE", inventario, 0, listaKardex);
                             Controlador = false;
                             break;
-                        case "2":
+                        case "Credito":
                             MetodoDePago("CDT", inventario, 1, listaKardex);
                             Controlador = false;
                             break;
@@ -63,29 +63,29 @@ namespace Registro_de_inventario
                     string opcion = SubMenu.Menu3();
                     switch (opcion)
                     {
-                        case "1":
-                        case "5":
+                        case "Efectivo":
                             Modelos("1.1.1.01.01", Comprobante, CuentasPago[tipo][0], inventario, listaKardex);
                             Controlador = false;
                             break;
-                        case "2":
+                        case "Efectivo M/E":
                             Modelos("1.1.1.01.02", Comprobante, CuentasPago[tipo][1], inventario, listaKardex);
                             Controlador = false;
                             break;
 
-                        case "3":
+                        case "Banco M/N":
+                        case "Cheque":
                             Modelos("1.1.1.02.01", Comprobante, CuentasPago[tipo][2], inventario, listaKardex);
                             Controlador = false;
                             break;
-                        case "4":
+                        case "Banco M/E":
                             Modelos("1.1.1.02.02", Comprobante, CuentasPago[tipo][3], inventario, listaKardex);
                             Controlador = false;
                             break;
-                        case "6":
+                        case "Letra de cambio":
                             Modelos("1.1.1.01.01", Comprobante, CuentasPago[tipo][4], inventario, listaKardex);
                             Controlador = false;
                             break;
-                        case "0":
+                        case "Salir":
                             Controlador = false;
                             break;
 
@@ -115,6 +115,7 @@ namespace Registro_de_inventario
                 decimal unitario = decimal.Parse(Console.ReadLine());
                 decimal total = cantidad * unitario;
                 Asiento asiento = new Asiento(Comprobante);
+                bool Verificador = false;
 
                 Kardex kar = listaKardex.BuscarKardexProducto(producto);
                 KardexTransaccion kardexTransaccion = new KardexTransaccion();
@@ -125,6 +126,7 @@ namespace Registro_de_inventario
                     kardexTransaccion.KardexCompra(cantidad, ultimaTransaccion.SaldoFisico + cantidad, unitario, ultimaTransaccion.SaldoValor);
                     kar.AgregarTransaccionKardex(kardexTransaccion);
                     AgregarTransaccionesAsiento(asiento, NCuenta, Pago, total, aplicarImpuestos: true);
+                    Verificador = true;
 
                 }
                 else
@@ -139,15 +141,14 @@ namespace Registro_de_inventario
 
                     AgregarTransaccionesAsiento(asiento, NCuenta, Pago, total, aplicarImpuestos);
                     listaKardex.AgregarKardex(kar);
+                    Verificador = false;
                 }
 
                 asiento.ImprimirAsientoCon();
-
-
-
-                inventario.AgregarAsiento(asiento);
                 kar.ImprimirKardex();
-                Console.ReadKey();
+
+                PreguntarEditar(NCuenta, Comprobante, Pago, inventario, asiento, listaKardex, kar, Verificador);
+
             }
             catch (Exception Ex)
             {
@@ -197,6 +198,58 @@ namespace Registro_de_inventario
             }
         }
 
+        private static void PreguntarEditar(string NCuenta, string Comprobante, string Pago, LibroDiario inventario, Asiento asiento,ListaKardex listaKardex, Kardex kar, bool verificador)
+        {
+            while (true)
+            {
+                Console.WriteLine("CONFIRME SU TRANSACCION");
+                Console.WriteLine($"1.Editar transaccion\n" +
+                    $"2.Cancelar Transaccion\n" +
+                    $"3.Guardar");
+                Console.Write("ingrese su opcion:");
+                string opcion = Console.ReadLine();
 
+
+                if(opcion == "1")
+                {
+                    Editar(kar, listaKardex, verificador);
+                    Modelos(NCuenta, Comprobante,Pago,inventario,listaKardex);
+                    break;
+                }else if(opcion == "2")
+                {
+                    Editar(kar, listaKardex, verificador);
+                    break;
+                }else if (opcion == "3")
+                {
+                    inventario.AgregarAsiento(asiento);
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Opcion invalida!!!");
+                    Console.ReadKey();
+                }
+
+            }
+        }
+
+        private static void Editar(Kardex kar, ListaKardex listaKardex, bool verificador)
+        {
+            if (verificador)
+            {
+                int indice = kar.KardexProducto.Count - 1;
+                kar.KardexProducto.RemoveAt(indice);
+
+            }
+            else
+            {                
+                int indice = listaKardex.KardexList.Count - 1;
+                listaKardex.KardexList.RemoveAt(indice);
+                indice = kar.KardexProducto.Count - 1;
+                kar.KardexProducto.RemoveAt(indice);
+
+            }
+        }
     }
 }
