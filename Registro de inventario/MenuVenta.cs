@@ -8,7 +8,7 @@ namespace Registro_de_inventario
 {
     class MenuVenta
     {
-        public static void TipoDeVenta(LibroDiario inventario, ListaKardex listaKardex)
+        public static void TipoDeVenta(LibroDiario inventario, ListaKardex listaKardex, JsonAlmacen<LibroDiario> jsonAlmacen, JsonAlmacen<ListaKardex> jsonkardex)
         {
             try
             {
@@ -34,6 +34,8 @@ namespace Registro_de_inventario
 
 
                 } while (Controlador);
+                jsonAlmacen.Guardar(inventario);
+                jsonkardex.Guardar(listaKardex);
             }
             catch (Exception Ex)
             {
@@ -116,11 +118,11 @@ namespace Registro_de_inventario
 
             asiento.AgregarTransaccion(new Transaccion(NCuenta,Pago, total, 0));
             asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "impuesto a las transacciones", total * 0.03m, 0));
-            asiento.AgregarTransaccion(new Transaccion("4.1.1.01.01", "  Venta de mercaderia", 0, total * 0.87m));
-            asiento.AgregarTransaccion(new Transaccion("2.1.2.01.01", "  Debito fiscal", 0, total * 0.13m));
-            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "  impuesto a las transacciones p/pagar", 0, total * 0.03m));
+            asiento.AgregarTransaccion(new Transaccion("4.1.1.01.01", "   Venta de mercaderia", 0, total * 0.87m));
+            asiento.AgregarTransaccion(new Transaccion("2.1.2.01.01", "   Debito fiscal", 0, total * 0.13m));
+            asiento.AgregarTransaccion(new Transaccion("6.1.1.08.01", "   impuesto a las transacciones p/pagar", 0, total * 0.03m));
             asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "costo de mercaderia vendida", costototal, 0));
-            asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "  inventario de mercaderia",0, costototal));
+            asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "   inventario de mercaderia",0, costototal));
 
             asiento.ImprimirAsientoCon();
             producto1.AgregarTransaccionKardex(kardexventa);

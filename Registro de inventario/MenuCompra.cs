@@ -8,7 +8,7 @@ namespace Registro_de_inventario
 {
     class MenuCompra
     {
-        public static void TipoDeCompra(LibroDiario inventario, ListaKardex listaKardex)
+        public static void TipoDeCompra(LibroDiario inventario, ListaKardex listaKardex,JsonAlmacen<LibroDiario> jsonAlmacen, JsonAlmacen<ListaKardex> jsonkardex)
         {
             try
             {
@@ -34,6 +34,8 @@ namespace Registro_de_inventario
 
 
                 } while (Controlador);
+                jsonAlmacen.Guardar(inventario);
+                jsonkardex.Guardar(listaKardex);
             }
             catch (Exception Ex)
             {
@@ -164,13 +166,13 @@ namespace Registro_de_inventario
             if (aplicarImpuestos)
             {
                 asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "inventario de mercadería", total * 0.87m, 0));
-                asiento.AgregarTransaccion(new Transaccion("1.1.2.03.01", "  crédito fiscal", total * 0.13m, 0));
-                asiento.AgregarTransaccion(new Transaccion(NCuenta, "  " + Pago, 0, total));
+                asiento.AgregarTransaccion(new Transaccion("1.1.2.03.01", "crédito fiscal", total * 0.13m, 0));
+                asiento.AgregarTransaccion(new Transaccion(NCuenta, "   " + Pago, 0, total));
             }
             else
             {
                 asiento.AgregarTransaccion(new Transaccion("1.1.3.01.01", "inventario de mercadería", total, 0));
-                asiento.AgregarTransaccion(new Transaccion("3.1.1.01.01", "  Capital Social", 0, total));
+                asiento.AgregarTransaccion(new Transaccion("3.1.1.01.01", "   Capital Social", 0, total));
             }
         }
 

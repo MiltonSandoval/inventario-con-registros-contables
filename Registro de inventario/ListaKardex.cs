@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace Registro_de_inventario
 {
@@ -22,12 +23,12 @@ namespace Registro_de_inventario
 
         public void ImprimirKarkexAll()
         {
+            var rule = new Rule("[green1]KARDEX[/]");
+            AnsiConsole.Write(rule);
             foreach (var item in KardexList)
             {
-                Console.WriteLine(item.Nombre);
                 item.ImprimirKardex();
-                Console.WriteLine();
-                Console.WriteLine(new string('-', 200));
+                Console.WriteLine();            
             }
             
         }

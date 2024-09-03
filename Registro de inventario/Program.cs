@@ -27,11 +27,11 @@ class Program
                 switch (opcion)
                 {
                     case "REGISTRAR UNA COMPRA":
-                        MenuCompra.TipoDeCompra(Inventario, ListaKardex);
+                        MenuCompra.TipoDeCompra(Inventario, ListaKardex,JsonLibro,JsonKardex);
                         break;
                     case "REGISTRAR UNA VENTA":
                         if (ListaKardex.KardexList.Count > 0)
-                            MenuVenta.TipoDeVenta(Inventario, ListaKardex);
+                            MenuVenta.TipoDeVenta(Inventario, ListaKardex,JsonLibro, JsonKardex);
                         else
                         {
                             Console.WriteLine("No tienes productos en tu inventario, agrega uno primero");
@@ -41,10 +41,7 @@ class Program
                     case "MOSTRAR REGISTROS":
                         if(Inventario.Libro.Count > 0 && ListaKardex.KardexList.Count > 0)
                         {
-                            Console.WriteLine("LIBRO DIARIO");
                             Inventario.ImprimirLibro();
-                            Console.WriteLine(new string('-', 200));
-                            Console.WriteLine("TODOS LOS KARDEX");
                             ListaKardex.ImprimirKarkexAll();
                             Console.WriteLine();
                             Console.ReadKey();
@@ -96,12 +93,12 @@ class Program
         AnsiConsole.Write(
         new FigletText("UPDS")
         .Centered()
-        .Color(Color.Blue));
-        var rule = new Rule("[red]SISTEMA DE REGISTRO CONTABLE[/]\n");
+        .Color(Color.Blue1));
+        var rule = new Rule("[red1]SISTEMA DE REGISTRO CONTABLE[/]\n");
         AnsiConsole.Write(rule);
         var opcion = AnsiConsole.Prompt(
         new SelectionPrompt<string>()
-            .Title("\t[green]MENU PRINCIPAL[/]")
+            .Title("\t[green1]MENU PRINCIPAL[/]")
             .PageSize(5)
             .AddChoices(new[] {
             "REGISTRAR UNA COMPRA", "REGISTRAR UNA VENTA", "MOSTRAR REGISTROS",

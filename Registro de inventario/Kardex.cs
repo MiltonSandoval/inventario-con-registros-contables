@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Transactions;
+using Spectre.Console;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Registro_de_inventario
 {
@@ -21,7 +25,7 @@ namespace Registro_de_inventario
 
             KardexProducto.Add(kardexTransaccion); 
         }
-
+         
         public KardexTransaccion UltimaTransa()
         {
             int indice = KardexProducto.Count() - 1;
@@ -31,17 +35,39 @@ namespace Registro_de_inventario
 
         public void ImprimirKardex()
         {
-            Console.WriteLine("{0,-24} {1,-20} {2,-16} {3,-16} {4,-16} {5,-16} {6,-16} {7,-20} {8,-20} {9,-20}",
-                "Fecha", "Detalle", "Entradas", "Salidas", "Saldos", "C.Adq.", "P.P.", "Costo Ent.", "Costo Sal.", "Costo Saldo");
-            Console.WriteLine(new string('-', 200)); 
-
+            var table = new Table();
+            table.Border = TableBorder.Double;
+            table.AddColumns(new[]
+            {
+                new TableColumn($"[darkolivegreen1_1]{Nombre}[/]"),
+                new TableColumn("[darkolivegreen1_1]FECHA[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]DETALLE[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]COMP[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]ENTRADAS FISICAS[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]SALIDAS FISICAS[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]SALDO FISICO[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]ADQ.[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]P.P[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]ENTRADAS[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]SALIDAS[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]SALDOS[/]").Centered()
+            });
             foreach (var transaccion in KardexProducto)
             {
-                Console.WriteLine("{0,-24} {1,-20} {2,-16} {3,-16} {4,-16} {5,-16:N2} {6,-16:N2} {7,-20:N2} {8,-20:N2} {9,-20:N2}",
-                    transaccion.fecha.ToShortDateString() , transaccion.Detalle, transaccion.EntradasFisica, transaccion.SalidasFisica,
-                    transaccion.SaldoFisico, transaccion.CostoAdq, transaccion.CostoPp, transaccion.EntradaValor,
-                    transaccion.SalidaValor, transaccion.SaldoValor);
+                table.AddRow(" ", 
+                    transaccion.fecha.ToShortDateString(), 
+                    transaccion.Detalle.ToString(), 
+                    transaccion.Comp, 
+                    transaccion.EntradasFisica.ToString(), 
+                    transaccion.SalidasFisica.ToString(), 
+                    transaccion.SaldoFisico.ToString(), 
+                    transaccion.CostoAdq.ToString("F2"), 
+                    transaccion.CostoPp.ToString("F2"), 
+                    transaccion.EntradaValor.ToString(), 
+                    transaccion.SalidaValor.ToString("F2"), 
+                    transaccion.SaldoValor.ToString("F2"));
             }
+            AnsiConsole.Write(table.Centered().BorderColor(Color.Silver));
         }
     }
 

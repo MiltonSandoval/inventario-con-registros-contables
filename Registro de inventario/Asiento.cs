@@ -46,16 +46,17 @@ namespace Registro_de_inventario
         {
             Console.Clear();
             var table = new Table();
+            table.Border = TableBorder.Double;
 
             table.AddColumns(new[]
             {
-                new TableColumn("FECHA").Centered(),
-                new TableColumn("CBTE").Centered(),
-                new TableColumn("As.N°").Centered(),
-                new TableColumn("Cod. Cta").Centered(),
-                new TableColumn("Detalle-Glosa").Centered(),
-                new TableColumn("Debe").Centered(),
-                new TableColumn("Haber").Centered()
+                new TableColumn("[darkolivegreen1_1]FECHA[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]CBTE[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]As.N°[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]Cod. Cta[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]Detalle-Glosa[/]").LeftAligned(),
+                new TableColumn("[darkolivegreen1_1]Debe[/]").Centered(),
+                new TableColumn("[darkolivegreen1_1]Haber[/]").Centered()
             });
 
             int contador = 0;
@@ -63,33 +64,17 @@ namespace Registro_de_inventario
             {
                 if (contador == 0)
                 {
-                    table.AddRow(date.ToShortDateString(),Cbte,AsientoN.ToString(),item.NumeroDeCuenta.ToString(),item.Cuenta.ToString(),item.Debe.ToString(),item.Haber.ToString());
+                    table.AddRow(date.ToShortDateString(),Cbte,AsientoN.ToString(),item.NumeroDeCuenta.ToString(),item.Cuenta.ToString(),item.Debe.ToString("F2"),item.Haber.ToString("F2"));
                     contador++;
                 }
                 else
                 {
-                    table.AddRow(" "," "," ", item.NumeroDeCuenta.ToString(), item.Cuenta.ToString(), item.Debe.ToString(), item.Haber.ToString());
+                    table.AddRow(" "," "," ", item.NumeroDeCuenta.ToString(), item.Cuenta.ToString(), item.Debe.ToString("F2"), item.Haber.ToString("F2"));
                 }
             }
 
-            AnsiConsole.Write(table);
-            Console.ReadKey();
+            AnsiConsole.Write(table.Centered().BorderColor(Color.Silver));
         }
-        public void ImprimirAsientoSin()
-        {
-            Console.Write($"{date.ToShortDateString(),-22}{Cbte,-10}{AsientoN,-10}");
-            int contador = 0;
-            foreach (var item in Transacciones)
-            {
-                if (contador == 0)
-                {
-                    item.GetTransaccionSinEspacio();
-                    contador++;
-                }
-                else
-                    item.GetTransaccionConEspacio();
-            }
-            Console.WriteLine();
-        }
+        
     }
 }
